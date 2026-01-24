@@ -7,7 +7,7 @@ const path = require('path');
 const app = express();
 const PORT = 3000;
 
-// ---------- DATABASE ----------
+// DATABASE
 const db = new sqlite3.Database('./db/database.sqlite');
 
 db.serialize(() => {
@@ -21,7 +21,6 @@ db.serialize(() => {
   `);
 });
 
-// ---------- FETCH RATES FROM CBR ----------
 async function loadRatesFromCBR() {
   const url = 'https://www.cbr.ru/scripts/XML_daily.asp';
   const response = await axios.get(url);
@@ -59,7 +58,6 @@ async function loadRatesFromCBR() {
 
 let currentRates = {};
 
-// ---------- SERVER START ----------
 (async () => {
   currentRates = await loadRatesFromCBR();
 

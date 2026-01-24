@@ -27,7 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
 let ratesToRUB = {};
 
 let step = 'exchange';
-// exchange | form | confirm | payment | success
 
 const dealDraft = {
   fromCurrency: null,
@@ -103,10 +102,8 @@ const cardInput = document.getElementById('cardNumber');
 cardInput.addEventListener('input', (e) => {
   let digits = getDigits(e.target.value);
 
-  // максимум 16 цифр
   digits = digits.slice(0, 16);
 
-  // формат 0000 0000 0000 0000
   const formatted = digits.replace(/(\d{4})(?=\d)/g, '$1 ');
 
   e.target.value = formatted;
@@ -116,11 +113,9 @@ cardInput.addEventListener('input', (e) => {
 
 const phoneInput = document.getElementById('phone');
 
-// при фокусе — если пусто, ставим +7
 phoneInput.addEventListener('input', (e) => {
   let digits = getDigits(e.target.value);
 
-  // всегда начинаем с 7
   if (digits.startsWith('8')) {
     digits = '7' + digits.slice(1);
   }
@@ -128,7 +123,6 @@ phoneInput.addEventListener('input', (e) => {
     digits = '7' + digits;
   }
 
-  // максимум 11 цифр
   digits = digits.slice(0, 11);
 
   let formatted = '+7';
@@ -150,10 +144,8 @@ phoneInput.addEventListener('input', (e) => {
   validateForm();
 });
 
-// Доступные валюты
 const currencies = ['RUB', 'USD', 'EUR'];
 
-// DOM элементы
 const fromInput = document.querySelectorAll('.amount-input')[0];
 const toInput = document.querySelectorAll('.amount-input')[1];
 
@@ -186,13 +178,12 @@ toInput.addEventListener('input', () => {
 const fromCurrencyBtn = document.querySelectorAll('.currency-btn')[0];
 const toCurrencyBtn = document.querySelectorAll('.currency-btn')[1];
 
-// Состояние
 let fromCurrency = 'RUB';
 let toCurrency = 'USD';
-let activeField = 'from'; // 'from' | 'to'
+let activeField = 'from';
 
 function getRate(from, to) {
-  // через RUB
+
   return ratesToRUB[from] / ratesToRUB[to];
 }
 
@@ -227,7 +218,6 @@ fromCurrencyBtn.addEventListener('pointerdown', () => {
   const index = currencies.indexOf(fromCurrency);
   let newCurrency = currencies[(index + 1) % currencies.length];
 
-  // Запрет одинаковых валют
   if (newCurrency === toCurrency) {
     newCurrency = currencies[(currencies.indexOf(newCurrency) + 1) % currencies.length];
   }
@@ -241,7 +231,6 @@ toCurrencyBtn.addEventListener('pointerdown', () => {
   const index = currencies.indexOf(toCurrency);
   let newCurrency = currencies[(index + 1) % currencies.length];
 
-  // Запрет одинаковых валют
   if (newCurrency === fromCurrency) {
     newCurrency = currencies[(currencies.indexOf(newCurrency) + 1) % currencies.length];
   }
@@ -332,7 +321,6 @@ document.getElementById('confirmDealBtn').addEventListener('pointerdown', async 
 
   const result = await response.json();
 
-  // 🔐 СОХРАНЯЕМ ОДИН РАЗ
   dealDraft.dealId = result.dealId;
   dealDraft.dealNumber = result.dealNumber;
   dealDraft.status = result.status;
