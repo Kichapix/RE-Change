@@ -1,27 +1,28 @@
-const tg = window.Telegram.WebApp;
-tg.expand();
+document.addEventListener('DOMContentLoaded', () => {
 
-const tg = window.Telegram?.WebApp;
+  const tg = window.Telegram?.WebApp;
 
-if (tg) {
-  tg.ready();
-}
-if (tg && tg.themeParams) {
-  document.documentElement.style.setProperty(
-      '--tg-bg',
-      tg.themeParams.bg_color || '#f5f6f8'
-  );
+  if (tg) {
+    tg.ready();
+    tg.expand();
 
-  document.documentElement.style.setProperty(
-      '--tg-button',
-      tg.themeParams.button_color || '#2f80ed'
-  );
+    if (tg.themeParams) {
+      document.documentElement.style.setProperty(
+          '--tg-bg',
+          tg.themeParams.bg_color || '#f5f6f8'
+      );
 
-  document.documentElement.style.setProperty(
-      '--tg-button-text',
-      tg.themeParams.button_text_color || '#ffffff'
-  );
-}
+      document.documentElement.style.setProperty(
+          '--tg-button',
+          tg.themeParams.button_color || '#2f80ed'
+      );
+
+      document.documentElement.style.setProperty(
+          '--tg-button-text',
+          tg.themeParams.button_text_color || '#ffffff'
+      );
+    }
+  }
 
 let ratesToRUB = {};
 
@@ -222,7 +223,7 @@ toInput.addEventListener('input', () => {
   recalculate();
 });
 
-fromCurrencyBtn.addEventListener('click', () => {
+fromCurrencyBtn.addEventListener('pointerdown', () => {
   const index = currencies.indexOf(fromCurrency);
   let newCurrency = currencies[(index + 1) % currencies.length];
 
@@ -236,7 +237,7 @@ fromCurrencyBtn.addEventListener('click', () => {
   recalculate();
 });
 
-toCurrencyBtn.addEventListener('click', () => {
+toCurrencyBtn.addEventListener('pointerdown', () => {
   const index = currencies.indexOf(toCurrency);
   let newCurrency = currencies[(index + 1) % currencies.length];
 
@@ -268,7 +269,7 @@ function goToStep(nextStep) {
   document.getElementById(`screen-${step}`).classList.remove('hidden');
 }
 
-document.getElementById('toFormBtn').addEventListener('click', () => {
+document.getElementById('toFormBtn').addEventListener('pointerdown', () => {
   if (!fromInput.value || !toInput.value) {
     alert('Введите сумму и выберите валюты');
     return;
@@ -282,7 +283,7 @@ document.getElementById('toFormBtn').addEventListener('click', () => {
   goToStep('form');
 });
 
-document.getElementById('toConfirmBtn').addEventListener('click', () => {
+document.getElementById('toConfirmBtn').addEventListener('pointerdown', () => {
   const fullName = document.getElementById('fullName').value;
   const email = document.getElementById('email').value;
   const phone = document.getElementById('phone').value;
@@ -312,7 +313,7 @@ document.getElementById('toConfirmBtn').addEventListener('click', () => {
   goToStep('confirm');
 });
 
-document.getElementById('confirmDealBtn').addEventListener('click', async () => {
+document.getElementById('confirmDealBtn').addEventListener('pointerdown', async () => {
 
   const response = await fetch('/api/deals', {
     method: 'POST',
@@ -342,7 +343,7 @@ document.getElementById('confirmDealBtn').addEventListener('click', async () => 
 });
 
 
-document.getElementById('paidBtn').addEventListener('click', async () => {
+document.getElementById('paidBtn').addEventListener('pointerdown', async () => {
 
   await fetch(`/api/deals/${dealDraft.dealId}/paid`, {
     method: 'POST'
@@ -354,6 +355,7 @@ document.getElementById('paidBtn').addEventListener('click', async () => {
       `Номер заявки: ${dealDraft.dealNumber}`;
 
   goToStep('success');
+});
 });
 
 
