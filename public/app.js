@@ -1,3 +1,6 @@
+const tg = window.Telegram.WebApp;
+tg.expand();
+
 const tg = window.Telegram?.WebApp;
 
 if (tg) {
