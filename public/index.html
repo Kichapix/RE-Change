@@ -14,9 +14,9 @@
 <div class="app">
 
 <!-- ЭКРАН 1: ОБМЕН -->
-<div class="screen" id="screen-exchange">
-
-  <h1 class="logo">RE-Change</h1>
+  <div class="screen" id="screen-exchange">
+    <div class="card">
+      <h1 class="logo">RE-Change</h1>
 
   <div class="exchange-card">
 
@@ -52,12 +52,16 @@
 
   </div>
 
-  <button class="pay-btn" id="toFormBtn">Оплатить</button>
+      <button class="btn-primary pay-btn" id="toFormBtn">
+        Оплатить
+      </button>
 </div>
+  </div>
 
 <!-- ЭКРАН 2: ФОРМА -->
   <div class="screen hidden" id="screen-form">
-    <h2>Введите данные</h2>
+    <div class="card">
+      <h2>Введите данные</h2>
 
     <div class="field">
       <input id="fullName" placeholder="ФИО">
@@ -79,36 +83,57 @@
       <div class="error" id="error-cardNumber"></div>
     </div>
 
-    <button id="toConfirmBtn" class="hidden-btn">Продолжить</button>
+      <button
+              id="toConfirmBtn"
+              class="btn-primary hidden-btn"
+      >
+        Продолжить
+      </button>
+  </div>
   </div>
 
 <!-- ЭКРАН 3: ПОДТВЕРЖДЕНИЕ -->
-<div class="screen hidden" id="screen-confirm">
-  <h2>Проверьте данные</h2>
+  <div class="screen hidden" id="screen-confirm">
+    <div class="card">
+      <h2>Подтверждение</h2>
 
   <div id="confirmData"></div>
 
-  <button id="confirmDealBtn">Подтвердить</button>
+      <button
+              id="confirmDealBtn"
+              class="btn-primary"
+      >
+        Подтвердить
+      </button>
 </div>
-
+  </div>
 <!-- ЭКРАН 4: ОПЛАТА -->
 <div class="screen hidden" id="screen-payment">
+  <div class="card">
   <h2>Оплата</h2>
 
   <p>Банк: Tinkoff</p>
   <p>Карта: 4444 3333 2222 1111</p>
   <p id="paymentAmount"></p>
 
-  <button id="paidBtn">Я оплатил</button>
+    <button
+            id="paidBtn"
+            class="btn-primary"
+    >
+      Я оплатил
+    </button>
+</div>
 </div>
 
 <!-- ЭКРАН 5: УСПЕХ -->
 <div class="screen hidden" id="screen-success">
+  <div class="card">
   <h2>Спасибо за сделку</h2>
   <p>Деньги будут отправлены в течение 30 минут</p>
   <p id="finalDealNumber"></p>
 </div>
 
+</div>
 </div>
 <script src="app.js"></script>
 </body>
