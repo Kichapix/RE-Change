@@ -56,16 +56,31 @@
 </div>
 
 <!-- ЭКРАН 2: ФОРМА -->
-<div class="screen hidden" id="screen-form">
-  <h2>Введите данные</h2>
+  <div class="screen hidden" id="screen-form">
+    <h2>Введите данные</h2>
 
-  <input id="fullName" placeholder="ФИО">
-  <input id="email" placeholder="E-mail">
-  <input id="phone" placeholder="Телефон">
-  <input id="cardNumber" placeholder="Номер карты">
+    <div class="field">
+      <input id="fullName" placeholder="ФИО">
+      <div class="error" id="error-fullName"></div>
+    </div>
 
-  <button id="toConfirmBtn">Продолжить</button>
-</div>
+    <div class="field">
+      <input id="email" placeholder="E-mail">
+      <div class="error" id="error-email"></div>
+    </div>
+
+    <div class="field">
+      <input id="phone" placeholder="Телефон">
+      <div class="error" id="error-phone"></div>
+    </div>
+
+    <div class="field">
+      <input id="cardNumber" placeholder="Номер карты">
+      <div class="error" id="error-cardNumber"></div>
+    </div>
+
+    <button id="toConfirmBtn" disabled>Продолжить</button>
+  </div>
 
 <!-- ЭКРАН 3: ПОДТВЕРЖДЕНИЕ -->
 <div class="screen hidden" id="screen-confirm">

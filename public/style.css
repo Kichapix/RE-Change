@@ -37,3 +37,13 @@ button {
 .screen {
   margin-top: 20px;
 }
+
+.error {
+  color: #e5484d;
+  font-size: 12px;
+  min-height: 14px;
+}
+
+input.invalid {
+  border: 1px solid #e5484d;
+}

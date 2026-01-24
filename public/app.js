@@ -8,12 +8,62 @@ const dealDraft = {
   toCurrency: null,
   fromAmount: null,
   toAmount: null,
+
   fullName: '',
   email: '',
   phone: '',
   cardNumber: '',
-  dealNumber: null
+
+  dealId: null,
+  dealNumber: null,
+  status: null
 };
+
+const validators = {
+  fullName: v => /^[А-Яа-яA-Za-z\s]{2,}$/.test(v),
+  email: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v),
+  phone: v => /^\+?\d{10,15}$/.test(v),
+  cardNumber: v => /^\d{16}$/.test(v.replace(/\s/g, ''))
+};
+
+function validateField(id) {
+  const input = document.getElementById(id);
+  const error = document.getElementById(`error-${id}`);
+  const value = input.value.trim();
+
+  if (!validators[id](value)) {
+    input.classList.add('invalid');
+    error.textContent = 'Некорректное значение';
+    return false;
+  }
+
+  input.classList.remove('invalid');
+  error.textContent = '';
+  return true;
+}
+
+function validateForm() {
+  const fields = ['fullName', 'email', 'phone', 'cardNumber'];
+  const ok = fields.every(validateField);
+  document.getElementById('toConfirmBtn').disabled = !ok;
+  return ok;
+}
+
+['fullName', 'email', 'phone', 'cardNumber'].forEach(id => {
+  document.getElementById(id).addEventListener('input', validateForm);
+});
+
+const cardInput = document.getElementById('cardNumber');
+
+cardInput.addEventListener('input', (e) => {
+  let value = e.target.value.replace(/\D/g, '');
+
+  if (value.length > 16) {
+    value = value.slice(0, 16);
+  }
+
+  e.target.value = value.replace(/(.{4})/g, '$1 ').trim();
+});
 
 // Доступные валюты
 const currencies = ['RUB', 'USD', 'EUR'];
@@ -156,9 +206,7 @@ document.getElementById('confirmDealBtn').addEventListener('click', async () => 
 
   const response = await fetch('/api/deals', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       fromCurrency: dealDraft.fromCurrency,
       toCurrency: dealDraft.toCurrency,
@@ -173,11 +221,12 @@ document.getElementById('confirmDealBtn').addEventListener('click', async () => 
 
   const result = await response.json();
 
+  // 🔐 СОХРАНЯЕМ ОДИН РАЗ
   dealDraft.dealId = result.dealId;
   dealDraft.dealNumber = result.dealNumber;
+  dealDraft.status = result.status;
 
-  document.getElementById('paymentAmount').innerText =
-      `К оплате: ${dealDraft.fromAmount} ${dealDraft.fromCurrency}`;
+  console.log('CREATED DEAL:', dealDraft);
 
   goToStep('payment');
 });
@@ -188,6 +237,8 @@ document.getElementById('paidBtn').addEventListener('click', async () => {
   await fetch(`/api/deals/${dealDraft.dealId}/paid`, {
     method: 'POST'
   });
+
+  dealDraft.status = 'paid';
 
   document.getElementById('finalDealNumber').innerText =
       `Номер заявки: ${dealDraft.dealNumber}`;
