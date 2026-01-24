@@ -11,13 +11,49 @@
 </head>
 <body>
 
-  <div class="app">
-    <h1>RE-Change</h1>
-    <p id="status">Приложение загружается...</p>
+<div class="app">
 
-    <button id="mainButton">Нажми меня</button>
+  <h1 class="logo">RE-Change</h1>
+
+  <div class="exchange-card">
+
+    <!-- ОТДАЮ -->
+    <div class="exchange-block">
+      <div class="exchange-header">
+        <span>Отдаю</span>
+        <button class="currency-btn">RUB</button>
+      </div>
+
+      <input
+              type="number"
+              class="amount-input"
+              placeholder="Сумма"
+      />
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ПОЛУЧАЮ -->
+    <div class="exchange-block">
+      <div class="exchange-header">
+        <span>Получаю</span>
+        <button class="currency-btn">USD</button>
+      </div>
+
+      <input
+              type="number"
+              class="amount-input"
+              placeholder="Сумма"
+      />
+    </div>
+
   </div>
 
-  <script src="app.js"></script>
+  <button class="pay-btn">Оплатить</button>
+
+</div>
+
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
