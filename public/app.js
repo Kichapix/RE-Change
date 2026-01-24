@@ -1,12 +1,7 @@
+let ratesToRUB = {};
+
 // Доступные валюты
 const currencies = ['RUB', 'USD', 'EUR'];
-
-// Временные курсы (как будто от ЦБ)
-const ratesToRUB = {
-  RUB: 1,
-  USD: 90,
-  EUR: 98
-};
 
 // DOM элементы
 const fromInput = document.querySelectorAll('.amount-input')[0];
@@ -79,5 +74,14 @@ toCurrencyBtn.addEventListener('click', () => {
   toCurrencyBtn.innerText = toCurrency;
   recalculate();
 });
+
+async function loadRates() {
+  const response = await fetch('/api/rates');
+  ratesToRUB = await response.json();
+  recalculate();
+}
+
+loadRates();
+
 
 
