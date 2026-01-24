@@ -141,6 +141,16 @@ let currentRates = {};
     );
   });
 
+  app.get('/api/debug/rates', (req, res) => {
+    db.all(
+        `SELECT * FROM currency_rates ORDER BY loaded_at DESC`,
+        (err, rows) => {
+          if (err) return res.status(500).json({ error: err.message });
+          res.json(rows);
+        }
+    );
+  });
+
   app.get('/api/debug/deals', (req, res) => {
     db.all('SELECT * FROM deals', (err, rows) => {
       if (err) return res.status(500).json({ error: err.message });
