@@ -21,7 +21,7 @@ const dealDraft = {
 
 const validators = {
   fullName: v => /^[А-Яа-яA-Za-z\s]{2,}$/.test(v),
-  email: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v),
+  email: v => /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(v),
   phone: v => /^\+7\s\d{3}\s\d{3}-\d{2}-\d{2}$/.test(v),
   cardNumber: v => /^\d{16}$/.test(v.replace(/\s/g, ''))
 };
@@ -51,7 +51,12 @@ function validateForm() {
   });
 
   const btn = document.getElementById('toConfirmBtn');
-  btn.disabled = !isValid;
+
+  if (isValid) {
+    btn.classList.remove('hidden-btn');
+  } else {
+    btn.classList.add('hidden-btn');
+  }
 
   return isValid;
 }

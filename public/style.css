@@ -47,3 +47,7 @@ button {
 input.invalid {
   border: 1px solid #e5484d;
 }
+
+.hidden-btn {
+  display: none;
+}
