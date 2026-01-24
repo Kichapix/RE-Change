@@ -152,16 +152,49 @@ document.getElementById('toConfirmBtn').addEventListener('click', () => {
   goToStep('confirm');
 });
 
-document.getElementById('confirmDealBtn').addEventListener('click', () => {
+document.getElementById('confirmDealBtn').addEventListener('click', async () => {
+
+  const response = await fetch('/api/deals', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      fromCurrency: dealDraft.fromCurrency,
+      toCurrency: dealDraft.toCurrency,
+      fromAmount: dealDraft.fromAmount,
+      toAmount: dealDraft.toAmount,
+      fullName: dealDraft.fullName,
+      email: dealDraft.email,
+      phone: dealDraft.phone,
+      cardNumber: dealDraft.cardNumber
+    })
+  });
+
+  const result = await response.json();
+
+  dealDraft.dealId = result.dealId;
+  dealDraft.dealNumber = result.dealNumber;
+
   document.getElementById('paymentAmount').innerText =
       `К оплате: ${dealDraft.fromAmount} ${dealDraft.fromCurrency}`;
 
   goToStep('payment');
 });
 
-document.getElementById('paidBtn').addEventListener('click', () => {
+
+document.getElementById('paidBtn').addEventListener('click', async () => {
+
+  await fetch(`/api/deals/${dealDraft.dealId}/paid`, {
+    method: 'POST'
+  });
+
+  document.getElementById('finalDealNumber').innerText =
+      `Номер заявки: ${dealDraft.dealNumber}`;
+
   goToStep('success');
 });
+
 
 
 

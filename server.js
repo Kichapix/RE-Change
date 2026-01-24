@@ -69,6 +69,94 @@ let currentRates = {};
     res.json(currentRates);
   });
 
+  app.use(express.json());
+
+  app.post('/api/deals', (req, res) => {
+    const {
+      fromCurrency,
+      toCurrency,
+      fromAmount,
+      toAmount,
+      fullName,
+      email,
+      phone,
+      cardNumber
+    } = req.body;
+
+    if (
+        !fromCurrency || !toCurrency ||
+        !fromAmount || !toAmount ||
+        !fullName || !email || !phone || !cardNumber
+    ) {
+      return res.status(400).json({ error: 'Missing fields' });
+    }
+
+    const dealNumber = generateDealNumber();
+    const createdAt = new Date().toISOString();
+
+    db.run(
+        `
+    INSERT INTO deals (
+      deal_number,
+      from_currency,
+      to_currency,
+      from_amount,
+      to_amount,
+      full_name,
+      email,
+      phone,
+      card_number,
+      status,
+      created_at
+    )
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `,
+        [
+          dealNumber,
+          fromCurrency,
+          toCurrency,
+          fromAmount,
+          toAmount,
+          fullName,
+          email,
+          phone,
+          cardNumber,
+          'created',
+          createdAt
+        ],
+        function (err) {
+          if (err) {
+            return res.status(500).json({ error: 'DB error' });
+          }
+
+          res.json({
+            dealId: this.lastID,
+            dealNumber
+          });
+        }
+    );
+  });
+
+  function generateDealNumber() {
+    return 'RC-' + Date.now();
+  }
+
+  app.post('/api/deals/:id/paid', (req, res) => {
+    const dealId = req.params.id;
+
+    db.run(
+        `UPDATE deals SET status = 'paid' WHERE id = ?`,
+        [dealId],
+        function (err) {
+          if (err) {
+            return res.status(500).json({ error: 'DB error' });
+          }
+
+          res.json({ success: true });
+        }
+    );
+  });
+
   app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
   });
