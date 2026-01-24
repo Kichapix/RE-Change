@@ -22,7 +22,7 @@ const dealDraft = {
 const validators = {
   fullName: v => /^[А-Яа-яA-Za-z\s]{2,}$/.test(v),
   email: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v),
-  phone: v => /^\+?\d{10,15}$/.test(v),
+  phone: v => /^\+7\s\d{3}\s\d{3}-\d{2}-\d{2}$/.test(v),
   cardNumber: v => /^\d{16}$/.test(v.replace(/\s/g, ''))
 };
 
@@ -44,9 +44,16 @@ function validateField(id) {
 
 function validateForm() {
   const fields = ['fullName', 'email', 'phone', 'cardNumber'];
-  const ok = fields.every(validateField);
-  document.getElementById('toConfirmBtn').disabled = !ok;
-  return ok;
+
+  const isValid = fields.every(id => {
+    const input = document.getElementById(id);
+    return input.value.trim() !== '' && validateField(id);
+  });
+
+  const btn = document.getElementById('toConfirmBtn');
+  btn.disabled = !isValid;
+
+  return isValid;
 }
 
 ['fullName', 'email', 'phone', 'cardNumber'].forEach(id => {
@@ -63,6 +70,42 @@ cardInput.addEventListener('input', (e) => {
   }
 
   e.target.value = value.replace(/(.{4})/g, '$1 ').trim();
+});
+
+const phoneInput = document.getElementById('phone');
+
+// при фокусе — если пусто, ставим +7
+phoneInput.addEventListener('focus', () => {
+  if (phoneInput.value.trim() === '') {
+    phoneInput.value = '+7';
+  }
+});
+
+// форматирование при вводе
+phoneInput.addEventListener('input', (e) => {
+  let value = e.target.value.replace(/\D/g, '');
+
+  // если пользователь стёр всё — возвращаем +7
+  if (value.length === 0) {
+    e.target.value = '+7';
+    return;
+  }
+
+  // всегда начинаем с 7
+  if (value[0] !== '7') {
+    value = '7' + value.slice(1);
+  }
+
+  value = value.slice(0, 11); // +7XXXXXXXXXX
+
+  const formatted =
+      '+7 ' +
+      value.slice(1, 4) +
+      (value.length > 4 ? ' ' + value.slice(4, 7) : '') +
+      (value.length > 7 ? '-' + value.slice(7, 9) : '') +
+      (value.length > 9 ? '-' + value.slice(9, 11) : '');
+
+  e.target.value = formatted.trim();
 });
 
 // Доступные валюты

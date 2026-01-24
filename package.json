@@ -1,0 +1,27 @@
+{
+  "name": "re-change",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kichapix/RE-Change.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Kichapix/RE-Change/issues"
+  },
+  "homepage": "https://github.com/Kichapix/RE-Change#readme",
+  "dependencies": {
+    "axios": "^1.13.2",
+    "express": "^5.2.1",
+    "sqlite3": "^5.1.7",
+    "xml2js": "^0.6.2"
+  }
+}
