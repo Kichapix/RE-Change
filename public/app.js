@@ -1,5 +1,20 @@
 let ratesToRUB = {};
 
+let step = 'exchange';
+// exchange | form | confirm | payment | success
+
+const dealDraft = {
+  fromCurrency: null,
+  toCurrency: null,
+  fromAmount: null,
+  toAmount: null,
+  fullName: '',
+  email: '',
+  phone: '',
+  cardNumber: '',
+  dealNumber: null
+};
+
 // Доступные валюты
 const currencies = ['RUB', 'USD', 'EUR'];
 
@@ -82,6 +97,72 @@ async function loadRates() {
 }
 
 loadRates();
+
+function goToStep(nextStep) {
+  step = nextStep;
+
+  document.querySelectorAll('.screen').forEach(s => {
+    s.classList.add('hidden');
+  });
+
+  document.getElementById(`screen-${step}`).classList.remove('hidden');
+}
+
+document.getElementById('toFormBtn').addEventListener('click', () => {
+  if (!fromInput.value || !toInput.value) {
+    alert('Введите сумму и выберите валюты');
+    return;
+  }
+
+  dealDraft.fromCurrency = fromCurrency;
+  dealDraft.toCurrency = toCurrency;
+  dealDraft.fromAmount = fromInput.value;
+  dealDraft.toAmount = toInput.value;
+
+  goToStep('form');
+});
+
+document.getElementById('toConfirmBtn').addEventListener('click', () => {
+  const fullName = document.getElementById('fullName').value;
+  const email = document.getElementById('email').value;
+  const phone = document.getElementById('phone').value;
+  const card = document.getElementById('cardNumber').value;
+
+  if (!fullName || !email || !phone || !card) {
+    alert('Заполните все поля');
+    return;
+  }
+
+  Object.assign(dealDraft, {
+    fullName,
+    email,
+    phone,
+    cardNumber: card
+  });
+
+  document.getElementById('confirmData').innerHTML = `
+    <p>${dealDraft.fromCurrency} → ${dealDraft.toCurrency}</p>
+    <p>${dealDraft.fromAmount} → ${dealDraft.toAmount}</p>
+    <p>${dealDraft.fullName}</p>
+    <p>${dealDraft.email}</p>
+    <p>${dealDraft.phone}</p>
+    <p>${dealDraft.cardNumber}</p>
+  `;
+
+  goToStep('confirm');
+});
+
+document.getElementById('confirmDealBtn').addEventListener('click', () => {
+  document.getElementById('paymentAmount').innerText =
+      `К оплате: ${dealDraft.fromAmount} ${dealDraft.fromCurrency}`;
+
+  goToStep('payment');
+});
+
+document.getElementById('paidBtn').addEventListener('click', () => {
+  goToStep('success');
+});
+
 
 
 

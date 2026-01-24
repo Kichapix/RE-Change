@@ -29,3 +29,11 @@ button {
   border-radius: 8px;
   cursor: pointer;
 }
+
+.hidden {
+  display: none;
+}
+
+.screen {
+  margin-top: 20px;
+}
