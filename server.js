@@ -83,6 +83,10 @@ let currentRates = {};
       cardNumber
     } = req.body;
 
+    if (fromAmount <= 0 || toAmount <= 0) {
+      return res.status(400).json({ error: 'Invalid amount' });
+    }
+
     if (
         !fromCurrency || !toCurrency ||
         !fromAmount || !toAmount ||
@@ -135,6 +139,13 @@ let currentRates = {};
           });
         }
     );
+  });
+
+  app.get('/api/debug/deals', (req, res) => {
+    db.all('SELECT * FROM deals', (err, rows) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(rows);
+    });
   });
 
   function generateDealNumber() {

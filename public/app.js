@@ -41,11 +41,18 @@ const dealDraft = {
   status: null
 };
 
+function getDigits(value) {
+  return value.replace(/\D/g, '');
+}
+
 const validators = {
   fullName: v => /^[А-Яа-яA-Za-z\s]{2,}$/.test(v),
   email: v => /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(v),
-  phone: v => /^\+7\s\d{3}\s\d{3}-\d{2}-\d{2}$/.test(v),
-  cardNumber: v => /^\d{16}$/.test(v.replace(/\s/g, ''))
+  phone: v => {
+    const digits = getDigits(v);
+    return digits.length === 11 && digits.startsWith('7');
+  },
+  cardNumber: v => getDigits(v).length === 16
 };
 
 function validateField(id) {
@@ -90,49 +97,53 @@ function validateForm() {
 const cardInput = document.getElementById('cardNumber');
 
 cardInput.addEventListener('input', (e) => {
-  let value = e.target.value.replace(/\D/g, '');
+  let digits = getDigits(e.target.value);
 
-  if (value.length > 16) {
-    value = value.slice(0, 16);
-  }
+  // максимум 16 цифр
+  digits = digits.slice(0, 16);
 
-  e.target.value = value.replace(/(.{4})/g, '$1 ').trim();
+  // формат 0000 0000 0000 0000
+  const formatted = digits.replace(/(\d{4})(?=\d)/g, '$1 ');
+
+  e.target.value = formatted;
+
+  validateForm();
 });
 
 const phoneInput = document.getElementById('phone');
 
 // при фокусе — если пусто, ставим +7
-phoneInput.addEventListener('focus', () => {
-  if (phoneInput.value.trim() === '') {
-    phoneInput.value = '+7';
-  }
-});
-
-// форматирование при вводе
 phoneInput.addEventListener('input', (e) => {
-  let value = e.target.value.replace(/\D/g, '');
-
-  // если пользователь стёр всё — возвращаем +7
-  if (value.length === 0) {
-    e.target.value = '+7';
-    return;
-  }
+  let digits = getDigits(e.target.value);
 
   // всегда начинаем с 7
-  if (value[0] !== '7') {
-    value = '7' + value.slice(1);
+  if (digits.startsWith('8')) {
+    digits = '7' + digits.slice(1);
+  }
+  if (!digits.startsWith('7')) {
+    digits = '7' + digits;
   }
 
-  value = value.slice(0, 11); // +7XXXXXXXXXX
+  // максимум 11 цифр
+  digits = digits.slice(0, 11);
 
-  const formatted =
-      '+7 ' +
-      value.slice(1, 4) +
-      (value.length > 4 ? ' ' + value.slice(4, 7) : '') +
-      (value.length > 7 ? '-' + value.slice(7, 9) : '') +
-      (value.length > 9 ? '-' + value.slice(9, 11) : '');
+  let formatted = '+7';
 
-  e.target.value = formatted.trim();
+  if (digits.length > 1) {
+    formatted += ' ' + digits.slice(1, 4);
+  }
+  if (digits.length >= 5) {
+    formatted += ' ' + digits.slice(4, 7);
+  }
+  if (digits.length >= 8) {
+    formatted += '-' + digits.slice(7, 9);
+  }
+  if (digits.length >= 10) {
+    formatted += '-' + digits.slice(9, 11);
+  }
+
+  e.target.value = formatted;
+  validateForm();
 });
 
 // Доступные валюты
@@ -141,6 +152,32 @@ const currencies = ['RUB', 'USD', 'EUR'];
 // DOM элементы
 const fromInput = document.querySelectorAll('.amount-input')[0];
 const toInput = document.querySelectorAll('.amount-input')[1];
+
+fromInput.addEventListener('input', () => {
+  let value = parseFloat(fromInput.value);
+
+  if (isNaN(value) || value <= 0) {
+    fromInput.value = '';
+    dealDraft.fromAmount = null;
+    return;
+  }
+
+  dealDraft.fromAmount = value;
+  recalculate();
+});
+
+toInput.addEventListener('input', () => {
+  let value = parseFloat(toInput.value);
+
+  if (isNaN(value) || value <= 0) {
+    toInput.value = '';
+    dealDraft.toAmount = null;
+    return;
+  }
+
+  dealDraft.toAmount = value;
+  recalculate();
+});
 
 const fromCurrencyBtn = document.querySelectorAll('.currency-btn')[0];
 const toCurrencyBtn = document.querySelectorAll('.currency-btn')[1];
