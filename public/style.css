@@ -1,12 +1,15 @@
+:root {
+  --tg-bg: #f5f6f8;
+  --tg-button: #2f80ed;
+  --tg-button-text: #ffffff;
+}
+
 * {
   box-sizing: border-box;
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-  background: #f5f5f5;
+  background: var(--tg-bg, #f5f6f8);
 }
 
 .app {
@@ -35,7 +38,8 @@ button {
 }
 
 .screen {
-  margin-top: 20px;
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+  transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .error {
@@ -85,8 +89,8 @@ button {
 }
 
 .btn-primary {
-  background: #2f80ed;
-  color: #ffffff;
+  background: var(--tg-button, #2f80ed);
+  color: var(--tg-button-text, #ffffff);
 }
 
 .btn-primary:hover {
@@ -152,4 +156,24 @@ input:focus {
 
 .exchange-block + .exchange-block {
   margin-top: 16px;
+}
+
+.screen {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.screen:not(.hidden) {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.app {
+  padding-bottom: calc(16px + env(safe-area-inset-bottom));
+  padding-top: calc(16px + env(safe-area-inset-top));
+}
+
+button, input {
+  -webkit-tap-highlight-color: transparent;
 }

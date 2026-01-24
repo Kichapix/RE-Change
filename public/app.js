@@ -1,3 +1,25 @@
+const tg = window.Telegram?.WebApp;
+
+if (tg) {
+  tg.ready();
+}
+if (tg && tg.themeParams) {
+  document.documentElement.style.setProperty(
+      '--tg-bg',
+      tg.themeParams.bg_color || '#f5f6f8'
+  );
+
+  document.documentElement.style.setProperty(
+      '--tg-button',
+      tg.themeParams.button_color || '#2f80ed'
+  );
+
+  document.documentElement.style.setProperty(
+      '--tg-button-text',
+      tg.themeParams.button_text_color || '#ffffff'
+  );
+}
+
 let ratesToRUB = {};
 
 let step = 'exchange';
