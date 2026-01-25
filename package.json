@@ -26,6 +26,8 @@
     "xml2js": "^0.6.2"
   },
   "devDependencies": {
+    "@faker-js/faker": "^10.2.0",
+    "fast-check": "^4.5.3",
     "jest": "^30.2.0"
   }
 }
