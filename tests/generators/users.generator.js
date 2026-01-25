@@ -1,8 +1,11 @@
 const { faker } = require('@faker-js/faker');
 
 function generateValidUser() {
+    const firstName = faker.person.firstName().replace(/[^a-zA-Zа-яА-Я]/g, '');
+    const lastName = faker.person.lastName().replace(/[^a-zA-Zа-яА-Я]/g, '');
+
     return {
-        fullName: faker.person.fullName(),
+        fullName: `${firstName} ${lastName}`,
         email: faker.internet.email(),
         phone: '+7' + faker.string.numeric(10),
         cardNumber: faker.finance.creditCardNumber('#### #### #### ####')
